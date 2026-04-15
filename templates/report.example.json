@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "run_id": "2026-04-15T23-00-00Z-local",
+  "timestamp": "2026-04-15T23:00:00Z",
+  "project_name": "kg-qa-api-evaluation",
+  "environment_name": "staging",
+  "mode": "quality",
+  "git_commit": "abcdef123456",
+  "total_cases": 3,
+  "passed_cases": 2,
+  "failed_cases": 1,
+  "average_latency_ms": 182.3,
+  "schema_failures": 0,
+  "kg_summary": {
+    "total_cases": 1,
+    "passed_cases": 1,
+    "failed_cases": 0,
+    "avg_entity_match_rate": 1.0,
+    "avg_relation_match_rate": 1.0,
+    "invalid_relation_count": 0,
+    "duplicate_entity_count": 0,
+    "duplicate_relation_count": 0,
+    "forbidden_hit_count": 0
+  },
+  "qa_summary": {
+    "total_cases": 2,
+    "passed_cases": 1,
+    "failed_cases": 1,
+    "avg_expected_keyword_hit_rate": 0.5,
+    "forbidden_keyword_hit_count": 0,
+    "citation_pass_count": 1,
+    "abstention_pass_count": 0,
+    "groundedness_rule_pass_count": 1
+  },
+  "regression_summary": {
+    "baseline_report_path": "reports/baseline.json",
+    "is_regression_detected": true,
+    "metrics_delta": {
+      "qa.avg_expected_keyword_hit_rate": -0.2
+    },
+    "worsened_cases": ["qa-002"],
+    "improved_cases": [],
+    "gating_result": "fail"
+  },
+  "case_results": [
+    {
+      "id": "kg-001",
+      "endpoint_type": "kg",
+      "status": "passed",
+      "latency_ms": 150,
+      "failure_reasons": [],
+      "request_payload": { "text": "Alice works for Acme Corp in Taipei." },
+      "normalized_output": {
+        "entities": [
+          { "text": "Alice", "type": "person" },
+          { "text": "Acme Corp", "type": "organization" },
+          { "text": "Taipei", "type": "location" }
+        ],
+        "relations": [
+          { "source": "Alice", "relation": "works_for", "target": "Acme Corp" }
+        ]
+      },
+      "raw_response": null,
+      "metrics": {
+        "entity_match_count": 3,
+        "entity_expected_count": 3,
+        "entity_match_rate": 1.0,
+        "relation_match_count": 1,
+        "relation_expected_count": 1,
+        "relation_match_rate": 1.0,
+        "invalid_relation_count": 0,
+        "duplicate_entity_count": 0,
+        "duplicate_relation_count": 0,
+        "forbidden_hit_count": 0
+      }
+    }
+  ]
+}

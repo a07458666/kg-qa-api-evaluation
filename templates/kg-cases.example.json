@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "cases": [
+    {
+      "id": "kg-001",
+      "title": "Simple organization relation",
+      "tags": ["smoke", "org"],
+      "input_text": "Alice works for Acme Corp in Taipei.",
+      "expected_entities": [
+        { "text": "Alice", "type": "person" },
+        { "text": "Acme Corp", "type": "organization", "aliases": ["Acme"] },
+        { "text": "Taipei", "type": "location" }
+      ],
+      "expected_relations": [
+        { "source": "Alice", "relation": "works_for", "target": "Acme Corp" }
+      ],
+      "allowed_relation_types": ["works_for", "located_in"],
+      "forbidden_entities": ["Bob"],
+      "notes": "Minimal happy-path KG case"
+    }
+  ]
+}
