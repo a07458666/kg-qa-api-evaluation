@@ -18,6 +18,8 @@ Use this skill to evaluate backend APIs that:
 - extract knowledge graphs from text
 - answer questions from context or retrieved evidence
 
+This workflow is intentionally agent-agnostic. The repository is compatible with Hermes-style skills, but the config formats, schemas, templates, and evaluation process are designed so most coding agents or automation systems can reuse them.
+
 This skill is designed for LLM-style outputs, where success is not just HTTP 200 but also output quality, schema validity, and regression stability.
 
 The workflow is schema-first:

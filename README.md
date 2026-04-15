@@ -2,20 +2,21 @@
 
 [English](./README.md) | [繁體中文](./README.zh-TW.md)
 
-Hermes skill for evaluating KG generation and QA backend APIs.
+Reusable evaluation workflow for KG generation and QA backend APIs.
 
-This repository contains a valid Hermes skill structure:
-- `SKILL.md` as the main skill definition
-- `schemas/` for JSON Schemas
-- `templates/` for starter config/case/report files
-- `references/` for evaluation guidance
-- `docs/specs/` for the detailed v1 specification
-- `scripts/` reserved for the future runner and baseline comparator
+This repository is designed to be useful across Hermes and other agent or automation setups:
+- `SKILL.md` provides the core workflow definition
+- `schemas/` contains JSON Schemas
+- `templates/` provides starter config/case/report files
+- `references/` provides evaluation guidance
+- `docs/specs/` contains the detailed v1 specification
+- `scripts/` is reserved for the future runner and baseline comparator
 
 Current focus:
 - schema-first design
 - smoke / quality / regression evaluation model
 - backend-agnostic artifact contracts
+- portability across different agent workflows
 
 Not implemented yet:
 - runnable API evaluator

@@ -2,10 +2,10 @@
 
 [English](./README.md) | [繁體中文](./README.zh-TW.md)
 
-用來評估 KG 生成與 QA 後端 API 的 Hermes skill。
+可重複使用的 KG 生成與 QA 後端 API 評估工作流。
 
-這個 repository 目前已具備合法的 Hermes skill 結構：
-- `SKILL.md`：主要 skill 定義
+這個 repository 的設計目標是同時能被 Hermes 與其他 agent / automation workflow 使用：
+- `SKILL.md`：核心工作流定義
 - `schemas/`：JSON Schema 契約
 - `templates/`：設定檔、測試案例、報告的起始範本
 - `references/`：評估準則與案例設計指引
@@ -16,6 +16,7 @@
 - schema-first 設計
 - smoke / quality / regression 評估模型
 - 與特定 backend 實作解耦的 artifact 契約
+- 可移植到不同 agent workflow 的設計
 
 尚未實作：
 - 可執行的 API evaluator
