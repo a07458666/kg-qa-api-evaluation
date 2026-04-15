@@ -17,6 +17,7 @@ Current focus:
 - smoke / quality / regression evaluation model
 - backend-agnostic artifact contracts
 - portability across different agent workflows
+- planned report presentation layer with D3.js graph rendering and Markdown QA rendering
 
 Not implemented yet:
 - runnable API evaluator

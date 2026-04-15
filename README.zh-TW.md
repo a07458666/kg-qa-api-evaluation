@@ -17,6 +17,7 @@
 - smoke / quality / regression 評估模型
 - 與特定 backend 實作解耦的 artifact 契約
 - 可移植到不同 agent workflow 的設計
+- 已先規劃報告呈現層：Graph 可用 D3.js，QA 回答支援 Markdown rich text
 
 尚未實作：
 - 可執行的 API evaluator

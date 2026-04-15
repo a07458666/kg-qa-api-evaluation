@@ -30,6 +30,7 @@
     "failed_cases": { "type": "integer", "minimum": 0 },
     "average_latency_ms": { "type": "number", "minimum": 0 },
     "schema_failures": { "type": "integer", "minimum": 0 },
+    "presentation": { "$ref": "#/$defs/PresentationConfig" },
     "kg_summary": { "$ref": "#/$defs/KgRunSummary" },
     "qa_summary": { "$ref": "#/$defs/QaRunSummary" },
     "regression_summary": { "$ref": "#/$defs/RegressionSummary" },
@@ -39,6 +40,50 @@
     }
   },
   "$defs": {
+    "GraphRendererConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["library", "layout"],
+      "properties": {
+        "library": { "type": "string", "enum": ["d3"] },
+        "layout": { "type": "string", "enum": ["force", "radial", "dagre-like"] },
+        "directed": { "type": "boolean" },
+        "zoom": { "type": "boolean" },
+        "pan": { "type": "boolean" },
+        "drag": { "type": "boolean" },
+        "show_legend": { "type": "boolean" },
+        "show_minimap": { "type": "boolean" },
+        "default_node_label_field": { "type": "string", "minLength": 1 },
+        "default_node_group_field": { "type": "string", "minLength": 1 },
+        "default_edge_label_field": { "type": "string", "minLength": 1 }
+      }
+    },
+    "QaRendererConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format"],
+      "properties": {
+        "format": { "type": "string", "enum": ["markdown"] },
+        "flavor": { "type": "string", "enum": ["gfm", "commonmark"] },
+        "allow_tables": { "type": "boolean" },
+        "allow_bold": { "type": "boolean" },
+        "allow_italic": { "type": "boolean" },
+        "allow_lists": { "type": "boolean" },
+        "allow_blockquotes": { "type": "boolean" },
+        "allow_code": { "type": "boolean" },
+        "sanitize_html": { "type": "boolean" }
+      }
+    },
+    "PresentationConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version"],
+      "properties": {
+        "version": { "type": "string", "minLength": 1 },
+        "graph_renderer": { "$ref": "#/$defs/GraphRendererConfig" },
+        "qa_renderer": { "$ref": "#/$defs/QaRendererConfig" }
+      }
+    },
     "KgRunSummary": {
       "type": "object",
       "additionalProperties": false,
@@ -110,6 +155,94 @@
         "gating_result": { "type": "string", "enum": ["pass", "fail"] }
       }
     },
+    "GraphNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "group": { "type": "string" },
+        "status": { "type": "string" },
+        "raw_text": { "type": "string" },
+        "meta": { "type": "object" }
+      }
+    },
+    "GraphLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "target", "label"],
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "target": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "status": { "type": "string" },
+        "meta": { "type": "object" }
+      }
+    },
+    "GraphPresentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["renderer", "nodes", "links"],
+      "properties": {
+        "renderer": { "type": "string", "enum": ["d3-force"] },
+        "title": { "type": "string" },
+        "nodes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/GraphNode" }
+        },
+        "links": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/GraphLink" }
+        },
+        "legend": { "type": "object" },
+        "style_hints": { "type": "object" }
+      }
+    },
+    "MarkdownSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "markdown"],
+      "properties": {
+        "title": { "type": "string", "minLength": 1 },
+        "markdown": { "type": "string" }
+      }
+    },
+    "MarkdownCitation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "markdown"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "markdown": { "type": "string" }
+      }
+    },
+    "QaPresentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["render_mode", "answer_markdown"],
+      "properties": {
+        "render_mode": { "type": "string", "enum": ["markdown"] },
+        "answer_markdown": { "type": "string" },
+        "sections": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/MarkdownSection" }
+        },
+        "citations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/MarkdownCitation" }
+        },
+        "style_hints": { "type": "object" }
+      }
+    },
+    "CasePresentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "graph": { "$ref": "#/$defs/GraphPresentation" },
+        "qa": { "$ref": "#/$defs/QaPresentation" }
+      }
+    },
     "CaseResult": {
       "type": "object",
       "additionalProperties": false,
@@ -125,6 +258,7 @@
         },
         "request_payload": { "type": "object" },
         "normalized_output": { "type": "object" },
+        "presentation": { "$ref": "#/$defs/CasePresentation" },
         "raw_response": {
           "oneOf": [
             { "type": "object" },

@@ -300,7 +300,46 @@ Matching recommendation:
 - `kg_summary?: KgRunSummary`
 - `qa_summary?: QaRunSummary`
 - `regression_summary?: RegressionSummary`
+- `presentation?: PresentationConfig`
 - `case_results: CaseResult[]`
+
+### 9.1.1 PresentationConfig
+Purpose:
+- allow rich UI rendering without changing the core evaluation semantics
+- keep report files machine-readable for CI while also supporting dashboards
+
+Fields:
+- `version: string`
+- `graph_renderer?: GraphRendererConfig`
+- `qa_renderer?: QaRendererConfig`
+
+`GraphRendererConfig` fields:
+- `library: "d3"`
+- `layout: "force" | "radial" | "dagre-like"`
+- `directed?: boolean`
+- `zoom?: boolean`
+- `pan?: boolean`
+- `drag?: boolean`
+- `show_legend?: boolean`
+- `show_minimap?: boolean`
+- `default_node_label_field?: string`
+- `default_node_group_field?: string`
+- `default_edge_label_field?: string`
+
+`QaRendererConfig` fields:
+- `format: "markdown"`
+- `flavor?: "gfm" | "commonmark"`
+- `allow_tables?: boolean`
+- `allow_bold?: boolean`
+- `allow_italic?: boolean`
+- `allow_lists?: boolean`
+- `allow_blockquotes?: boolean`
+- `allow_code?: boolean`
+- `sanitize_html?: boolean`
+
+Recommendation:
+- use D3.js force layout for KG graph rendering in v1
+- use GitHub Flavored Markdown for QA rich-text rendering so tables are supported
 
 ### 9.2 KgRunSummary
 Fields:
@@ -343,8 +382,59 @@ Common fields:
 - `failure_reasons: string[]`
 - `request_payload?: object`
 - `normalized_output?: object`
+- `presentation?: CasePresentation`
 - `raw_response?: object | string | null`
 - `metrics?: object`
+
+### 9.5.1 CasePresentation
+Optional presentation payload per case.
+
+Fields:
+- `graph?: GraphPresentation`
+- `qa?: QaPresentation`
+
+`GraphPresentation` fields:
+- `renderer: "d3-force"`
+- `title?: string`
+- `nodes: GraphNode[]`
+- `links: GraphLink[]`
+- `legend?: object`
+- `style_hints?: object`
+
+`GraphNode` fields:
+- `id: string`
+- `label: string`
+- `group?: string`
+- `status?: string`
+- `raw_text?: string`
+- `meta?: object`
+
+`GraphLink` fields:
+- `source: string`
+- `target: string`
+- `label: string`
+- `status?: string`
+- `meta?: object`
+
+`QaPresentation` fields:
+- `render_mode: "markdown"`
+- `answer_markdown: string`
+- `sections?: MarkdownSection[]`
+- `citations?: MarkdownCitation[]`
+- `style_hints?: object`
+
+`MarkdownSection` fields:
+- `title: string`
+- `markdown: string`
+
+`MarkdownCitation` fields:
+- `label: string`
+- `markdown: string`
+
+Recommendation:
+- keep raw answer in `normalized_output.answer`
+- use `presentation.qa.answer_markdown` only for UI rendering
+- keep graph visualization data in `presentation.graph.nodes` and `presentation.graph.links`
 
 KG-specific metrics recommendation:
 - `entity_match_count`
@@ -429,3 +519,4 @@ Suggested adapter interfaces:
 3. Decide whether config stays JSON or changes to YAML.
 4. Add Python runner that validates files against schemas before making API calls.
 5. Add report comparison helper for baseline regressions.
+6. Add a presentation-aware UI layer that renders `presentation.graph` via D3.js and `presentation.qa` via sanitized Markdown.

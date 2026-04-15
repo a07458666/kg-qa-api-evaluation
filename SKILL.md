@@ -73,6 +73,7 @@ kg-qa-api-evaluation/
   references/
     evaluation-rubric.md
     case-design-guidelines.md
+    report-presentation-design.md
   templates/
     config.example.json
     kg-cases.example.json
@@ -158,12 +159,16 @@ A run produces:
 - per-endpoint summary metrics
 - per-case results
 - optional regression summary
+- optional presentation metadata for graph and rich-text rendering
 
 Schema:
 - `schemas/report.schema.json`
 
 Template:
 - `templates/report.example.json`
+
+Presentation design reference:
+- `references/report-presentation-design.md`
 
 ## Evaluation Modes
 
@@ -330,6 +335,7 @@ See:
 - `docs/specs/kg-qa-api-evaluation-v1.md`
 - `references/evaluation-rubric.md`
 - `references/case-design-guidelines.md`
+- `references/report-presentation-design.md`
 
 ## Practical Default
 
