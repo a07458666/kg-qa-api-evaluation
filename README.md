@@ -1,8 +1,10 @@
 # kg-qa-api-evaluation
 
+[English](./README.md) | [繁體中文](./README.zh-TW.md)
+
 Hermes skill for evaluating KG generation and QA backend APIs.
 
-This repository now contains a valid Hermes skill shape:
+This repository contains a valid Hermes skill structure:
 - `SKILL.md` as the main skill definition
 - `schemas/` for JSON Schemas
 - `templates/` for starter config/case/report files
