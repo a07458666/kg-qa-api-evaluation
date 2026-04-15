@@ -1,0 +1,179 @@
+{
+  "schema_version": "1.0",
+  "run_id": "2026-04-15T23-00-00Z-local",
+  "timestamp": "2026-04-15T23:00:00Z",
+  "project_name": "kg-qa-api-evaluation",
+  "environment_name": "staging",
+  "mode": "quality",
+  "git_commit": "abcdef123456",
+  "total_cases": 3,
+  "passed_cases": 2,
+  "failed_cases": 1,
+  "average_latency_ms": 182.3,
+  "schema_failures": 0,
+  "presentation": {
+    "version": "1.0",
+    "graph_renderer": {
+      "library": "d3",
+      "layout": "force",
+      "directed": true,
+      "zoom": true,
+      "pan": true,
+      "drag": true,
+      "show_legend": true,
+      "show_minimap": false,
+      "default_node_label_field": "label",
+      "default_node_group_field": "group",
+      "default_edge_label_field": "label"
+    },
+    "qa_renderer": {
+      "format": "markdown",
+      "flavor": "gfm",
+      "allow_tables": true,
+      "allow_bold": true,
+      "allow_italic": true,
+      "allow_lists": true,
+      "allow_blockquotes": true,
+      "allow_code": true,
+      "sanitize_html": true
+    }
+  },
+  "kg_summary": {
+    "total_cases": 1,
+    "passed_cases": 1,
+    "failed_cases": 0,
+    "avg_entity_match_rate": 1.0,
+    "avg_relation_match_rate": 1.0,
+    "invalid_relation_count": 0,
+    "duplicate_entity_count": 0,
+    "duplicate_relation_count": 0,
+    "forbidden_hit_count": 0
+  },
+  "qa_summary": {
+    "total_cases": 2,
+    "passed_cases": 1,
+    "failed_cases": 1,
+    "avg_expected_keyword_hit_rate": 0.5,
+    "forbidden_keyword_hit_count": 0,
+    "citation_pass_count": 1,
+    "abstention_pass_count": 0,
+    "groundedness_rule_pass_count": 1
+  },
+  "regression_summary": {
+    "baseline_report_path": "reports/baseline.json",
+    "is_regression_detected": true,
+    "metrics_delta": {
+      "qa.avg_expected_keyword_hit_rate": -0.2
+    },
+    "worsened_cases": ["qa-002"],
+    "improved_cases": [],
+    "gating_result": "fail"
+  },
+  "case_results": [
+    {
+      "id": "kg-001",
+      "endpoint_type": "kg",
+      "status": "passed",
+      "latency_ms": 150,
+      "failure_reasons": [],
+      "request_payload": { "text": "Alice works for Acme Corp in Taipei." },
+      "normalized_output": {
+        "entities": [
+          { "text": "Alice", "type": "person" },
+          { "text": "Acme Corp", "type": "organization" },
+          { "text": "Taipei", "type": "location" }
+        ],
+        "relations": [
+          { "source": "Alice", "relation": "works_for", "target": "Acme Corp" }
+        ]
+      },
+      "presentation": {
+        "graph": {
+          "renderer": "d3-force",
+          "title": "kg-001 graph",
+          "nodes": [
+            { "id": "alice", "label": "Alice", "group": "person", "status": "matched", "raw_text": "Alice", "meta": {} },
+            { "id": "acme-corp", "label": "Acme Corp", "group": "organization", "status": "matched", "raw_text": "Acme Corp", "meta": {} },
+            { "id": "taipei", "label": "Taipei", "group": "location", "status": "matched", "raw_text": "Taipei", "meta": {} }
+          ],
+          "links": [
+            { "source": "alice", "target": "acme-corp", "label": "works_for", "status": "matched", "meta": {} }
+          ],
+          "legend": {
+            "groups": ["person", "organization", "location"],
+            "statuses": ["matched", "missing", "unexpected"]
+          },
+          "style_hints": {
+            "color_by": "group",
+            "edge_color_by": "status",
+            "node_size_metric": null
+          }
+        }
+      },
+      "raw_response": null,
+      "metrics": {
+        "entity_match_count": 3,
+        "entity_expected_count": 3,
+        "entity_match_rate": 1.0,
+        "relation_match_count": 1,
+        "relation_expected_count": 1,
+        "relation_match_rate": 1.0,
+        "invalid_relation_count": 0,
+        "duplicate_entity_count": 0,
+        "duplicate_relation_count": 0,
+        "forbidden_hit_count": 0
+      }
+    },
+    {
+      "id": "qa-001",
+      "endpoint_type": "qa",
+      "status": "passed",
+      "latency_ms": 210,
+      "failure_reasons": [],
+      "request_payload": { "question": "Where does Alice work?", "context": "Alice works for Acme Corp in Taipei." },
+      "normalized_output": {
+        "answer": "Alice works for Acme Corp in Taipei.",
+        "citations": ["Alice works for Acme Corp in Taipei."]
+      },
+      "presentation": {
+        "qa": {
+          "render_mode": "markdown",
+          "answer_markdown": "**Answer:** Alice works for **Acme Corp** in Taipei.",
+          "sections": [
+            {
+              "title": "Answer",
+              "markdown": "Alice works for **Acme Corp** in Taipei."
+            },
+            {
+              "title": "Evidence",
+              "markdown": "| Source | Support |\n|---|---|\n| doc-1 | Alice works for Acme Corp in Taipei. |"
+            }
+          ],
+          "citations": [
+            {
+              "label": "doc-1",
+              "markdown": "Alice works for Acme Corp in Taipei."
+            }
+          ],
+          "style_hints": {
+            "emphasize_failure_reasons": true,
+            "collapse_long_context": true
+          }
+        }
+      },
+      "raw_response": null,
+      "metrics": {
+        "answer_present": true,
+        "answer_length": 35,
+        "expected_keyword_hits": 2,
+        "expected_keyword_total": 2,
+        "expected_keyword_hit_rate": 1.0,
+        "forbidden_keyword_hits": 0,
+        "citation_hits": 1,
+        "citation_expected_total": 1,
+        "abstention_pass": true,
+        "groundedness_rule_pass": true
+      }
+    }
+  ]
+}

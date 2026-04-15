@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>kg-qa-api-evaluation report viewer</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div>
+          <h1>kg-qa-api-evaluation</h1>
+          <p class="muted">Static report viewer prototype</p>
+        </div>
+        <nav class="nav">
+          <button class="nav-btn active" data-tab="overview">Overview</button>
+          <button class="nav-btn" data-tab="kg">KG</button>
+          <button class="nav-btn" data-tab="qa">QA</button>
+          <button class="nav-btn" data-tab="regression">Regression</button>
+        </nav>
+        <div class="control-group">
+          <label for="reportFile">Load report JSON</label>
+          <input id="reportFile" type="file" accept="application/json" />
+        </div>
+        <div class="control-group">
+          <button id="loadSampleBtn">Load bundled sample</button>
+        </div>
+      </aside>
+
+      <main class="content">
+        <header class="topbar">
+          <div>
+            <h2 id="projectTitle">Report Viewer</h2>
+            <p id="runMeta" class="muted">No report loaded</p>
+          </div>
+          <div id="statusBadge" class="badge">idle</div>
+        </header>
+
+        <section id="overview" class="tab-panel active"></section>
+        <section id="kg" class="tab-panel"></section>
+        <section id="qa" class="tab-panel"></section>
+        <section id="regression" class="tab-panel"></section>
+      </main>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
