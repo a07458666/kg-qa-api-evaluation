@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/kg-qa-api-evaluation/schemas/qa-cases.schema.json",
+  "title": "QA evaluation cases",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "cases"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0" },
+    "cases": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/QaCase" }
+    }
+  },
+  "$defs": {
+    "QaCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "question"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string" },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "question": { "type": "string", "minLength": 1 },
+        "context": { "type": "string" },
+        "metadata": { "type": "object" },
+        "expected_answer": { "type": "string", "minLength": 1 },
+        "expected_keywords": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "forbidden_keywords": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "expected_citations": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "should_abstain": { "type": "boolean" },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

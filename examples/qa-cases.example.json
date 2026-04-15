@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "cases": [
+    {
+      "id": "qa-001",
+      "title": "Direct fact lookup",
+      "tags": ["smoke", "factoid"],
+      "question": "Where does Alice work?",
+      "context": "Alice works for Acme Corp in Taipei.",
+      "expected_keywords": ["Acme", "Acme Corp"],
+      "forbidden_keywords": ["Google"],
+      "expected_citations": ["Alice works for Acme Corp in Taipei."],
+      "should_abstain": false,
+      "notes": "Simple grounded QA case"
+    },
+    {
+      "id": "qa-002",
+      "title": "Should abstain on missing evidence",
+      "tags": ["abstain"],
+      "question": "What is Alice's salary?",
+      "context": "Alice works for Acme Corp in Taipei.",
+      "forbidden_keywords": ["100000", "salary"],
+      "should_abstain": true,
+      "notes": "Evaluator should expect abstention because the context lacks salary info"
+    }
+  ]
+}

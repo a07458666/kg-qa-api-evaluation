@@ -1,0 +1,239 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/kg-qa-api-evaluation/schemas/config.schema.json",
+  "title": "kg-qa-api-evaluation config",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "project_name",
+    "environment_name",
+    "base_url"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0" },
+    "project_name": { "type": "string", "minLength": 1 },
+    "environment_name": { "type": "string", "minLength": 1 },
+    "base_url": { "type": "string", "format": "uri" },
+    "default_headers": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "auth": { "$ref": "#/$defs/AuthConfig" },
+    "http": { "$ref": "#/$defs/HttpConfig" },
+    "output": { "$ref": "#/$defs/OutputConfig" },
+    "kg_endpoint": { "$ref": "#/$defs/KgEndpointConfig" },
+    "qa_endpoint": { "$ref": "#/$defs/QaEndpointConfig" },
+    "thresholds": { "$ref": "#/$defs/ThresholdConfig" },
+    "regression": { "$ref": "#/$defs/RegressionConfig" }
+  },
+  "$defs": {
+    "AuthConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["none", "bearer", "header"]
+        },
+        "token_env": { "type": "string", "minLength": 1 },
+        "header_name": { "type": "string", "minLength": 1 },
+        "prefix": { "type": "string" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "bearer" } } },
+          "then": { "required": ["token_env"] }
+        },
+        {
+          "if": { "properties": { "type": { "const": "header" } } },
+          "then": { "required": ["token_env", "header_name"] }
+        }
+      ]
+    },
+    "HttpConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "timeout_seconds": { "type": "integer", "minimum": 1 },
+        "retry_count": { "type": "integer", "minimum": 0 },
+        "verify_ssl": { "type": "boolean" },
+        "concurrency": { "type": "integer", "minimum": 1 },
+        "max_response_chars": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "OutputConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["output_dir", "save_raw_response"],
+      "properties": {
+        "output_dir": { "type": "string", "minLength": 1 },
+        "save_raw_response": { "type": "boolean" },
+        "write_summary_markdown": { "type": "boolean" }
+      }
+    },
+    "KgInputFieldMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_text_field"],
+      "properties": {
+        "input_text_field": { "type": "string", "minLength": 1 },
+        "metadata_field": { "type": "string", "minLength": 1 }
+      }
+    },
+    "KgResponseFieldMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entities_field",
+        "relations_field",
+        "entity_text_field",
+        "relation_source_field",
+        "relation_type_field",
+        "relation_target_field"
+      ],
+      "properties": {
+        "entities_field": { "type": "string", "minLength": 1 },
+        "relations_field": { "type": "string", "minLength": 1 },
+        "metadata_field": { "type": "string", "minLength": 1 },
+        "entity_id_field": { "type": "string", "minLength": 1 },
+        "entity_text_field": { "type": "string", "minLength": 1 },
+        "entity_type_field": { "type": "string", "minLength": 1 },
+        "relation_source_field": { "type": "string", "minLength": 1 },
+        "relation_type_field": { "type": "string", "minLength": 1 },
+        "relation_target_field": { "type": "string", "minLength": 1 }
+      }
+    },
+    "KgEndpointConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled",
+        "path",
+        "method",
+        "request_template",
+        "input_field_mapping",
+        "response_field_mapping",
+        "required_entity_fields",
+        "required_relation_fields",
+        "case_file"
+      ],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "path": { "type": "string", "minLength": 1 },
+        "method": { "type": "string", "enum": ["POST", "PUT"] },
+        "request_template": { "type": "object" },
+        "input_field_mapping": { "$ref": "#/$defs/KgInputFieldMapping" },
+        "response_field_mapping": { "$ref": "#/$defs/KgResponseFieldMapping" },
+        "required_entity_fields": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "required_relation_fields": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "allowed_relation_types": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "case_file": { "type": "string", "minLength": 1 }
+      }
+    },
+    "QaInputFieldMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["question_field"],
+      "properties": {
+        "question_field": { "type": "string", "minLength": 1 },
+        "context_field": { "type": "string", "minLength": 1 },
+        "metadata_field": { "type": "string", "minLength": 1 }
+      }
+    },
+    "QaResponseFieldMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["answer_field"],
+      "properties": {
+        "answer_field": { "type": "string", "minLength": 1 },
+        "citations_field": { "type": "string", "minLength": 1 },
+        "metadata_field": { "type": "string", "minLength": 1 }
+      }
+    },
+    "QaEndpointConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled",
+        "path",
+        "method",
+        "request_template",
+        "input_field_mapping",
+        "response_field_mapping",
+        "require_citations",
+        "case_file"
+      ],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "path": { "type": "string", "minLength": 1 },
+        "method": { "type": "string", "enum": ["POST", "PUT"] },
+        "request_template": { "type": "object" },
+        "input_field_mapping": { "$ref": "#/$defs/QaInputFieldMapping" },
+        "response_field_mapping": { "$ref": "#/$defs/QaResponseFieldMapping" },
+        "require_citations": { "type": "boolean" },
+        "abstention_patterns": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "case_file": { "type": "string", "minLength": 1 }
+      }
+    },
+    "KgThresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "min_entity_match_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "min_relation_match_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "max_duplicate_entities": { "type": "integer", "minimum": 0 },
+        "max_duplicate_relations": { "type": "integer", "minimum": 0 },
+        "fail_on_forbidden_hits": { "type": "boolean" }
+      }
+    },
+    "QaThresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "min_expected_keyword_hit_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "min_answer_length": { "type": "integer", "minimum": 0 },
+        "max_answer_length": { "type": "integer", "minimum": 1 },
+        "fail_on_forbidden_keywords": { "type": "boolean" },
+        "require_abstention_when_expected": { "type": "boolean" }
+      }
+    },
+    "ThresholdConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kg": { "$ref": "#/$defs/KgThresholds" },
+        "qa": { "$ref": "#/$defs/QaThresholds" }
+      }
+    },
+    "RegressionConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "baseline_report_path": { "type": "string", "minLength": 1 },
+        "fail_on_regression": { "type": "boolean" },
+        "max_pass_rate_drop": { "type": "number", "minimum": 0, "maximum": 1 },
+        "max_metric_drop": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    }
+  }
+}

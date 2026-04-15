@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/kg-qa-api-evaluation/schemas/report.schema.json",
+  "title": "Evaluation report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "timestamp",
+    "project_name",
+    "environment_name",
+    "mode",
+    "total_cases",
+    "passed_cases",
+    "failed_cases",
+    "schema_failures",
+    "case_results"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0" },
+    "run_id": { "type": "string", "minLength": 1 },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "project_name": { "type": "string", "minLength": 1 },
+    "environment_name": { "type": "string", "minLength": 1 },
+    "mode": { "type": "string", "enum": ["smoke", "quality", "regression", "full"] },
+    "git_commit": { "type": "string" },
+    "total_cases": { "type": "integer", "minimum": 0 },
+    "passed_cases": { "type": "integer", "minimum": 0 },
+    "failed_cases": { "type": "integer", "minimum": 0 },
+    "average_latency_ms": { "type": "number", "minimum": 0 },
+    "schema_failures": { "type": "integer", "minimum": 0 },
+    "kg_summary": { "$ref": "#/$defs/KgRunSummary" },
+    "qa_summary": { "$ref": "#/$defs/QaRunSummary" },
+    "regression_summary": { "$ref": "#/$defs/RegressionSummary" },
+    "case_results": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/CaseResult" }
+    }
+  },
+  "$defs": {
+    "KgRunSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_cases",
+        "passed_cases",
+        "failed_cases",
+        "invalid_relation_count",
+        "duplicate_entity_count",
+        "duplicate_relation_count",
+        "forbidden_hit_count"
+      ],
+      "properties": {
+        "total_cases": { "type": "integer", "minimum": 0 },
+        "passed_cases": { "type": "integer", "minimum": 0 },
+        "failed_cases": { "type": "integer", "minimum": 0 },
+        "avg_entity_match_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "avg_relation_match_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "invalid_relation_count": { "type": "integer", "minimum": 0 },
+        "duplicate_entity_count": { "type": "integer", "minimum": 0 },
+        "duplicate_relation_count": { "type": "integer", "minimum": 0 },
+        "forbidden_hit_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "QaRunSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_cases",
+        "passed_cases",
+        "failed_cases",
+        "forbidden_keyword_hit_count",
+        "citation_pass_count",
+        "abstention_pass_count"
+      ],
+      "properties": {
+        "total_cases": { "type": "integer", "minimum": 0 },
+        "passed_cases": { "type": "integer", "minimum": 0 },
+        "failed_cases": { "type": "integer", "minimum": 0 },
+        "avg_expected_keyword_hit_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "forbidden_keyword_hit_count": { "type": "integer", "minimum": 0 },
+        "citation_pass_count": { "type": "integer", "minimum": 0 },
+        "abstention_pass_count": { "type": "integer", "minimum": 0 },
+        "groundedness_rule_pass_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "RegressionSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "baseline_report_path",
+        "is_regression_detected",
+        "metrics_delta"
+      ],
+      "properties": {
+        "baseline_report_path": { "type": "string", "minLength": 1 },
+        "is_regression_detected": { "type": "boolean" },
+        "metrics_delta": { "type": "object" },
+        "worsened_cases": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "improved_cases": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "gating_result": { "type": "string", "enum": ["pass", "fail"] }
+      }
+    },
+    "CaseResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "endpoint_type", "status", "failure_reasons"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "endpoint_type": { "type": "string", "enum": ["kg", "qa"] },
+        "status": { "type": "string", "enum": ["passed", "failed", "error"] },
+        "latency_ms": { "type": "number", "minimum": 0 },
+        "failure_reasons": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "request_payload": { "type": "object" },
+        "normalized_output": { "type": "object" },
+        "raw_response": {
+          "oneOf": [
+            { "type": "object" },
+            { "type": "string" },
+            { "type": "null" }
+          ]
+        },
+        "metrics": { "type": "object" }
+      }
+    }
+  }
+}

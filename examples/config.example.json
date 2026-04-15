@@ -1,0 +1,92 @@
+{
+  "schema_version": "1.0",
+  "project_name": "kg-qa-api-evaluation",
+  "environment_name": "staging",
+  "base_url": "https://api.example.com",
+  "default_headers": {
+    "Content-Type": "application/json"
+  },
+  "auth": {
+    "type": "bearer",
+    "token_env": "API_TOKEN",
+    "prefix": "Bearer"
+  },
+  "http": {
+    "timeout_seconds": 30,
+    "retry_count": 1,
+    "verify_ssl": true,
+    "concurrency": 1,
+    "max_response_chars": 50000
+  },
+  "output": {
+    "output_dir": "reports",
+    "save_raw_response": true,
+    "write_summary_markdown": true
+  },
+  "kg_endpoint": {
+    "enabled": true,
+    "path": "/extract-kg",
+    "method": "POST",
+    "request_template": {},
+    "input_field_mapping": {
+      "input_text_field": "text",
+      "metadata_field": "metadata"
+    },
+    "response_field_mapping": {
+      "entities_field": "entities",
+      "relations_field": "relations",
+      "metadata_field": "metadata",
+      "entity_id_field": "id",
+      "entity_text_field": "text",
+      "entity_type_field": "type",
+      "relation_source_field": "source",
+      "relation_type_field": "relation",
+      "relation_target_field": "target"
+    },
+    "required_entity_fields": ["text"],
+    "required_relation_fields": ["source", "relation", "target"],
+    "allowed_relation_types": ["works_for", "founded", "located_in"],
+    "case_file": "examples/kg-cases.example.json"
+  },
+  "qa_endpoint": {
+    "enabled": true,
+    "path": "/qa",
+    "method": "POST",
+    "request_template": {},
+    "input_field_mapping": {
+      "question_field": "question",
+      "context_field": "context",
+      "metadata_field": "metadata"
+    },
+    "response_field_mapping": {
+      "answer_field": "answer",
+      "citations_field": "citations",
+      "metadata_field": "metadata"
+    },
+    "require_citations": false,
+    "abstention_patterns": ["i don't know", "insufficient information", "cannot determine"],
+    "case_file": "examples/qa-cases.example.json"
+  },
+  "thresholds": {
+    "kg": {
+      "min_entity_match_rate": 0.8,
+      "min_relation_match_rate": 0.7,
+      "max_duplicate_entities": 0,
+      "max_duplicate_relations": 0,
+      "fail_on_forbidden_hits": true
+    },
+    "qa": {
+      "min_expected_keyword_hit_rate": 0.7,
+      "min_answer_length": 1,
+      "max_answer_length": 2000,
+      "fail_on_forbidden_keywords": true,
+      "require_abstention_when_expected": true
+    }
+  },
+  "regression": {
+    "baseline_report_path": "reports/baseline.json",
+    "fail_on_regression": true,
+    "max_pass_rate_drop": 0.05,
+    "max_metric_drop": 0.1
+  }
+}

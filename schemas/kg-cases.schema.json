@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/kg-qa-api-evaluation/schemas/kg-cases.schema.json",
+  "title": "KG evaluation cases",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "cases"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0" },
+    "cases": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/KgCase" }
+    }
+  },
+  "$defs": {
+    "ExpectedEntity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
+      "properties": {
+        "text": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 1 },
+        "aliases": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "required": { "type": "boolean" }
+      }
+    },
+    "ExpectedRelation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "relation", "target"],
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "relation": { "type": "string", "minLength": 1 },
+        "target": { "type": "string", "minLength": 1 },
+        "source_aliases": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "target_aliases": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "required": { "type": "boolean" }
+      }
+    },
+    "KgCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "input_text"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string" },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "input_text": { "type": "string", "minLength": 1 },
+        "metadata": { "type": "object" },
+        "expected_entities": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/ExpectedEntity" }
+        },
+        "expected_relations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/ExpectedRelation" }
+        },
+        "allowed_relation_types": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "forbidden_entities": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "forbidden_relations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/ExpectedRelation" }
+        },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}
